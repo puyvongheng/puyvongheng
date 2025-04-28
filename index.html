@@ -123,6 +123,13 @@
 </head>
 
 <body>
+    <div class="wrapper">
+        <div class="background"></div>
+        <div class="noise"></div>
+    
+    
+    
+  
 
     <!-- Header Section -->
     <header class="p-5 mb-4 cool-header rounded-4 text-center" data-aos="fade-up">
@@ -193,12 +200,57 @@
         </div>
     </div> <!-- End container -->
 
+  
 
-    <div class="text-center mt-5 mb-3" >
+<div class="text-center mt-5 mb-3" >
         <p class="text-muted">© 2025 PUYVONG HENG. All rights reserved.</p>
         <p class="text-muted">Made with ❤️ using HTML, CSS, and JavaScript  (AI).</p>
 </div>
-  
+
+
+
+
+    <style>
+        /* Color Block Gradient */
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg,
+                    #ff9a9e 0%,
+                    #fad0c4 10%,
+                    #fbc2eb 20%,
+                    #a6c1ee 30%,
+                    #84fab0 40%,
+                    #8fd3f4 50%,
+                    #cfd9df 60%,
+                    #fccb90 70%,
+                    #ff9a9e 80%,
+                    #fcb69f 90%,
+                    #ffdde1 100%);
+            background-size: 400% 400%;
+            animation: gradientMove 25s ease infinite;
+            filter: blur(40px) brightness(1.1);
+            z-index: -2;
+        }
+   
+    
+        /* Noise layer */
+        .noise {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+            /* free noise */
+            opacity: 0.12;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+
+
+
+</div>
 
     <!-- JavaScript Libraries -->
     <script src="static/aos.js"></script>
@@ -218,6 +270,7 @@
     </script>
 
   
+
               
 
     <!-- Custom JavaScript for Data Loading -->

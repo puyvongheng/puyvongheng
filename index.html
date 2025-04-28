@@ -12,106 +12,7 @@
     <link rel="stylesheet" href="static/aos.css">
     <link rel="stylesheet" href="static/css/style.css"> <!-- Your custom styles -->
 
-    <style>
-        /* Global Styles (Combined from original) */
-        .profile-image {
-            width: 140px;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 5px solid white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
 
-        /* Typing Effect Placeholder Style (Animation added via JS if desired) */
-        #name.typing-effect {
-            /* Basic styles, animation can be added/removed via JS */
-            display: inline-block;
-            /* Needed for border */
-            white-space: nowrap;
-            overflow: hidden;
-            /* border-right: 3px solid #333; */
-            /* Blinking caret effect needs JS/CSS toggle */
-        }
-
-        /* Section Titles */
-        h2 {
-            font-weight: 600;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            color: #2a5298;
-            /* Default color */
-        }
-
-        /* Card Styles */
-        .card {
-            border: none;
-            background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border-radius: 8px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .card-title {
-            color: #2a5298;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-text {
-            color: #444;
-        }
-
-        .badge {
-            border-radius: 50px;
-            padding: 0.5rem 1rem;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: inline-block;
-            /* Ensure proper spacing */
-            text-decoration: none;
-            /* Remove underline from links */
-        }
-
-        .badge:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Section-Specific Styling */
-        #education,
-        #experience,
-        #skills,
-        #projects {
-            margin-bottom: 4rem;
-        }
-
-        .skill-icon {
-            height: 25px;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-
-        /* Header Style (Similar to the cool-header in the Flask template) */
-        .cool-header {
-            background-color: #f8f9fa;
-            /* Light background */
-            /* Add gradients or other styles if desired */
-        }
-    </style>
 
     <style>
         /* Gradient Background for Page */
@@ -135,6 +36,12 @@
         .profile-image:hover {
             transform: scale(1.05);
         }
+           .skill-icon {
+            height: 25px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
     
         /* Section Title */
         h2 {
@@ -151,13 +58,7 @@
         }
     
         /* Cool Header */
-        .cool-header {
-            background: linear-gradient(135deg, #89f7fe, #66a6ff);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            animation: slideDown 1s ease;
-        }
+    
     
         /* Cards */
         .card {
@@ -218,39 +119,7 @@
             color: white;
         }
     
-        /* Animations */
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-    
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    
-        @keyframes slideDown {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-    
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-
-
-
-
-
-
     </style>
-
 </head>
 
 <body>
@@ -266,8 +135,6 @@
             <div id="contacts" class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
                 <!-- Contact buttons will be added here -->
             </div>
-
-           
         </div>
     </header>
 
@@ -292,6 +159,8 @@
                     </div>
                     <p id="no-education" class="text-muted" style="display: none;">No education listed.</p>
                 </section>
+
+                
             </div>
 
             <div class="col-lg-4">
@@ -437,6 +306,7 @@
                     });
                 } else {
                     noData.style.display = 'block';
+
                 }
             });
 
@@ -507,6 +377,30 @@
                             badge.style.background = backgroundStyle;
                             badge.style.color = skill.color || '#fff'; // Default text color
 
+
+                                // --- Add Progress Bar ---
+                            const progressContainer = document.createElement("div");
+                            progressContainer.className = "progress"; // Bootstrap progress container
+                            progressContainer.setAttribute('data-aos', 'fade-zoom-in');
+
+                            progressContainer.style.height = "6px";    // Thin bar
+                            progressContainer.style.background = "#D9D9D993"; // Light background
+                            progressContainer.style.marginTop = "4px"; // Slight space from badge
+
+                            const progressBar = document.createElement("div");
+                            progressBar.className = "progress-bar";
+                            progressBar.style.width = (skill.percent * 100) + "%"; // skill.percent is assumed 0.0 - 1.0
+                            progressBar.style.background = backgroundStyle; // Same as badge color
+                            progressBar.setAttribute('role', 'progressbar');
+                            progressBar.setAttribute('aria-valuenow', (skill.percent * 100));
+                            progressBar.setAttribute('aria-valuemin', '0');
+                            progressBar.setAttribute('aria-valuemax', '100');
+
+                            progressContainer.appendChild(progressBar);
+
+
+
+                            skillDiv.appendChild(progressContainer); // Append the progress bar
                             skillDiv.appendChild(icon);
                             skillDiv.appendChild(badge);
                             skillContainer.appendChild(skillDiv);

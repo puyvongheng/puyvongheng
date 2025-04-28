@@ -1,6 +1,6 @@
 # 👋 Hi, I’m @puyvongheng
 
-Welcome to my repository! I'm Puyvong Heng, a passionate developer with a focus on building web applications and backend systems. This repository showcases my **CV/Portfolio** that highlights my work experience, education, skills, projects, and more.
+Welcome to my repository! I'm Puyvong Heng,
 
 ## 🔧 Technologies I Work With
 

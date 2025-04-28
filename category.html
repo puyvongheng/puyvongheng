@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title will be set dynamically -->
+    <title>Category Projects</title>
+    <!-- Assuming static assets are in a 'static' folder relative to the HTML -->
+    <link rel="stylesheet" href="static/bootstrap.min.css">
+    <link rel="stylesheet" href="static/all.min.css"> <!-- Font Awesome -->
+    <link rel="stylesheet" href="static/aos.css">
+    <link rel="stylesheet" href="static/css/style.css"> <!-- Your custom styles -->
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-y7nF8k+LtExUf0GbbHQmnwZ3vWcbdQZB9Dznc/y0Plh0D7EMycD6ks8qHf4dhw3n+bi2qqAkQzkkmloH4PAtNw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    <style>
+        /* Reusing some key styles from index.html for consistency */
+        h1,
+        h2 {
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2a5298;
+            /* Default color */
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        h1 .badge {
+            /* Style the category name within the H1 */
+            font-size: 1.5rem;
+            /* Slightly smaller than h1 */
+            vertical-align: middle;
+            margin-left: 10px;
+            background: linear-gradient(to right, #dd0031, #A00025FF);
+            color: #fff;
+        }
+
+        .card {
+            border: none;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            height: 100%;
+            /* Make cards in a row same height */
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            /* Allow content to stack vertically */
+        }
+
+        .card-title {
+            color: #2a5298;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            color: #444;
+            flex-grow: 1;
+            /* Allow description to take available space */
+            margin-bottom: 1rem;
+            /* Space before link */
+        }
+
+        .card-img-top {
+            max-height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .project-link {
+            margin-top: auto;
+            /* Push link to the bottom */
+            align-self: flex-start;
+            /* Align link to the start */
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* Optional: Style for disabled pagination links */
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #fff;
+            border-color: #dee2e6;
+        }
+
+        /* Optional: Style for active pagination link */
+        .pagination .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: #2a5298;
+            border-color: #2a5298;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-4">
+        <h1 id="category-title">
+            Projects in Category: <span id="category-name-display" class="badge">Loading...</span>
+        </h1>
+
+        <!-- Project List Container -->
+        <div id="category-project-list" class="row g-4 mt-3" >
+            <!-- Project cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Message for no projects -->
+        <p id="no-category-projects" class="text-center text-muted mt-4" style="display: none;">
+            No projects found in this category.
+        </p>
+
+        <!-- Pagination Controls -->
+        <nav aria-label="Project navigation" class="mt-5" data-aos="fade-up">
+            <ul id="pagination-controls" class="pagination">
+                <!-- Pagination links will be inserted here -->
+            </ul>
+        </nav>
+
+
+
+        <div class="text-center mt-4 mb-5">
+            <a href="index.html" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Main CV
+            </a>
+        </div>
+
+    </div> <!-- End container -->
+
+    <!-- JavaScript Libraries -->
+    <script src="static/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    // Manually refresh AOS when scrolled to top
+    window.addEventListener('scroll', function () {
+        if (window.scrollY === 0) {
+            AOS.refresh(); // Refresh AOS when scroll position is at the top
+        }
+    });
+
+
+    </script>
+
+    <!-- Custom JavaScript for Category Page -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // --- Helper Function to Fetch JSON ---
+            async function fetchData(url) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status} while fetching ${url}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error("Could not fetch data:", error);
+                    return null; // Return null on error
+                }
+            }
+
+            // --- Get Category Name and Page from URL ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryName = urlParams.get('name') ? decodeURIComponent(urlParams.get('name')) : null;
+            const currentPage = parseInt(urlParams.get('page') || '1', 10);
+            const itemsPerPage = 9; // Adjust number of projects per page (e.g., 3x3 grid)
+
+            // --- Update Title and Heading ---
+            const categoryNameDisplay = document.getElementById("category-name-display");
+            if (categoryName) {
+                document.title = `${categoryName} Projects - CV`;
+                categoryNameDisplay.textContent = categoryName;
+                categoryNameDisplay.style.background = ''; // Reset potential loading style if needed
+                categoryNameDisplay.style.color = '';
+            } else {
+                document.title = "Unknown Category - CV";
+                categoryNameDisplay.textContent = "Unknown";
+                categoryNameDisplay.classList.add('bg-danger'); // Indicate error
+            }
+
+            // --- Select DOM Elements ---
+            const projectListContainer = document.getElementById("category-project-list");
+            const noProjectsMessage = document.getElementById("no-category-projects");
+            const paginationContainer = document.getElementById("pagination-controls");
+
+            // --- Load and Display Projects ---
+            if (categoryName) {
+                fetchData("data/projects.json").then(allProjects => {
+                    if (!allProjects) {
+                        projectListContainer.innerHTML = '<p class="text-danger text-center">Could not load project data.</p>';
+                        return;
+                    }
+
+                    // Filter projects by category (case-insensitive)
+                    const filteredProjects = allProjects.filter(project =>
+                        project.category && project.category.toLowerCase() === categoryName.toLowerCase()
+                    );
+
+                    if (filteredProjects.length === 0) {
+                        noProjectsMessage.style.display = 'block';
+                        projectListContainer.innerHTML = ''; // Clear any potential loading indicator
+                        paginationContainer.innerHTML = ''; // No pagination needed
+                    } else {
+                        noProjectsMessage.style.display = 'none';
+
+                        // --- Pagination Logic ---
+                        const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+                        const startIndex = (currentPage - 1) * itemsPerPage;
+                        const endIndex = startIndex + itemsPerPage;
+                        const paginatedProjects = filteredProjects.slice(startIndex, endIndex);
+
+                        // --- Display Paginated Projects ---
+                        projectListContainer.innerHTML = ''; // Clear existing
+                        paginatedProjects.forEach(project => {
+                            const col = document.createElement("div");
+                            // Adjust grid: col-md-6 for 2 per row, col-lg-4 for 3 per row
+                            col.className = "col-md-6 col-lg-4";
+                            col.setAttribute('data-aos', 'fade-up');
+
+                            let imgHtml = '';
+                            if (project.cover) {
+                                imgHtml = `<img src="${project.cover}" class="card-img-top" alt="${project.title || 'Project'} cover">`;
+                            }
+
+                            let linkHtml = '';
+                            if (project.url && project.url !== '#') {
+                                linkHtml = `<a href="${project.url}" target="_blank" class="btn btn-sm btn-outline-primary project-link mt-auto">View Project <i class="fas fa-external-link-alt ms-1"></i></a>`;
+                            } else {
+                                // Optionally show something else if no link
+                                // linkHtml = `<span class="text-muted mt-auto">No link available</span>`;
+                            }
+
+                            col.innerHTML = `
+                                <div class="card">
+                                    ${imgHtml}
+                                    <div class="card-body">
+                                        <h5 class="card-title">${project.title || 'Untitled Project'}</h5>
+                                        <p class="card-text">${project.description || 'No description.'}</p>
+                                        ${linkHtml}
+                                    </div>
+                                </div>
+                            `;
+                            projectListContainer.appendChild(col);
+                        });
+
+                        // --- Generate Pagination Controls ---
+                        paginationContainer.innerHTML = ''; // Clear existing
+
+                        // Previous Button
+                        const prevLi = document.createElement('li');
+                        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                        prevLi.innerHTML = `<a class="page-link" href="category.html?name=${encodeURIComponent(categoryName)}&page=${currentPage - 1}" aria-label="Previous"><span aria-hidden="true">«</span></a>`;
+                        paginationContainer.appendChild(prevLi);
+
+                        // Page Number Buttons (simplified example)
+                        for (let i = 1; i <= totalPages; i++) {
+                            const pageLi = document.createElement('li');
+                            pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                            pageLi.innerHTML = `<a class="page-link" href="category.html?name=${encodeURIComponent(categoryName)}&page=${i}">${i}</a>`;
+                            paginationContainer.appendChild(pageLi);
+                        }
+                        // Consider adding logic here for many pages (e.g., showing '...')
+
+                        // Next Button
+                        const nextLi = document.createElement('li');
+                        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                        nextLi.innerHTML = `<a class="page-link" href="category.html?name=${encodeURIComponent(categoryName)}&page=${currentPage + 1}" aria-label="Next"><span aria-hidden="true">»</span></a>`;
+                        paginationContainer.appendChild(nextLi);
+
+
+                        // Refresh AOS after adding dynamic content
+                        AOS.refresh();
+                    }
+                });
+            } else {
+                // Handle case where category name is missing from URL
+                projectListContainer.innerHTML = '<p class="text-danger text-center">No category specified in the URL.</p>';
+                noProjectsMessage.style.display = 'block';
+                noProjectsMessage.textContent = 'Please go back and click on a category link.';
+                paginationContainer.innerHTML = '';
+            }
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+
+</html>

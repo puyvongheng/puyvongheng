@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title will be set dynamically -->
+    <title>CV</title>
+    <!-- Assuming static assets are in a 'static' folder relative to the HTML -->
+    <link rel="stylesheet" href="static/bootstrap.min.css">
+    <link rel="stylesheet" href="static/all.min.css"> <!-- Font Awesome -->
+    <link rel="stylesheet" href="static/aos.css">
+    <link rel="stylesheet" href="static/css/style.css"> <!-- Your custom styles -->
+
+    <style>
+        /* Global Styles (Combined from original) */
+        .profile-image {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Typing Effect Placeholder Style (Animation added via JS if desired) */
+        #name.typing-effect {
+            /* Basic styles, animation can be added/removed via JS */
+            display: inline-block;
+            /* Needed for border */
+            white-space: nowrap;
+            overflow: hidden;
+            /* border-right: 3px solid #333; */
+            /* Blinking caret effect needs JS/CSS toggle */
+        }
+
+        /* Section Titles */
+        h2 {
+            font-weight: 600;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #2a5298;
+            /* Default color */
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: #2a5298;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            color: #444;
+        }
+
+        .badge {
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            /* Ensure proper spacing */
+            text-decoration: none;
+            /* Remove underline from links */
+        }
+
+        .badge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Section-Specific Styling */
+        #education,
+        #experience,
+        #skills,
+        #projects {
+            margin-bottom: 4rem;
+        }
+
+        .skill-icon {
+            height: 25px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        /* Header Style (Similar to the cool-header in the Flask template) */
+        .cool-header {
+            background-color: #f8f9fa;
+            /* Light background */
+            /* Add gradients or other styles if desired */
+        }
+    </style>
+
+    <style>
+        /* Gradient Background for Page */
+        body {
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+    
+        /* Profile Image */
+        .profile-image {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s ease;
+        }
+    
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+    
+        /* Section Title */
+        h2 {
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            color: #4a00e0;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: fadeIn 1s ease;
+        }
+    
+        /* Cool Header */
+        .cool-header {
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            animation: slideDown 1s ease;
+        }
+    
+        /* Cards */
+        .card {
+            border: none;
+            background: linear-gradient(145deg, #ffffff, #e6e9f0);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+        }
+    
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        }
+    
+        .card-body {
+            padding: 2rem;
+        }
+    
+        .card-title {
+            color: #4a00e0;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+    
+        .card-text {
+            color: #555;
+        }
+    
+        /* Badges (for Skills/Contacts) */
+        .badge {
+            border-radius: 30px;
+            padding: 0.6rem 1.2rem;
+            margin: 5px;
+            font-size: 0.95rem;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+    
+        .badge:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+        }
+    
+        /* Buttons inside contacts */
+        .btn.badge {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+        }
+    
+        .btn.badge:hover {
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            color: white;
+        }
+    
+        /* Animations */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+    
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        @keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+    
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+
+
+
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <header class="p-5 mb-4 cool-header rounded-4 text-center" data-aos="fade-up">
+        <div class="container-fluid py-5">
+            <img id="profile-img" src="" alt="Profile Image" class="profile-image mb-3" style="display: none;">
+            <!-- Hide initially -->
+            <h1 id="name" class="display-5 fw-bold"></h1> <!-- Add typing-effect class via JS if needed -->
+            <p id="title" class="fs-4 fst-italic"></p>
+            <p id="summary" class.col-md-8.fs-5.mx-auto"></p>
+            <div id="contacts" class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                <!-- Contact buttons will be added here -->
+            </div>
+
+           
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="container"> <!-- Added container for better spacing -->
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <!-- Work Experience -->
+                <section id="experience" data-aos="zoom-in-right">
+                    <h2><i class="fas fa-briefcase me-2 text-primary"></i>Work Experience</h2>
+                    <div id="experience-list">
+                        <!-- Experience cards will be added here -->
+                    </div>
+                    <p id="no-experience" class="text-muted" style="display: none;">No work experience listed.</p>
+                </section>
+
+                <!-- Education -->
+                <section id="education" data-aos="zoom-in-right">
+                    <h2><i class="fas fa-graduation-cap me-2 text-primary"></i>Education</h2>
+                    <div id="education-list">
+                        <!-- Education cards will be added here -->
+                    </div>
+                    <p id="no-education" class="text-muted" style="display: none;">No education listed.</p>
+                </section>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Skills -->
+                 
+                <section id="skills" data-aos="zoom-in-left">
+
+                <h2>
+                    <img src="https://png.pngtree.com/element_our/png/20181226/capabilityheadhumanknowledgeskill-line-icon--vector-isol-png_283474.jpg"
+                        alt="Skills Icon" class="me-2" style="width: 24px; height: 24px;">
+                    Skills
+                </h2>
+                    <div class="card">
+                        <div class="card-body" id="skills-list">
+                            <!-- Skills categories and badges will be added here -->
+                        </div>
+                        <p id="no-skills" class="text-muted p-3" style="display: none;">No skills listed.</p>
+                    </div>
+                </section>
+
+                <!-- Projects -->
+                <section id="projects" data-aos="zoom-in-left">
+                    <h2><i class="fas fa-project-diagram me-2 text-primary"></i>Highlighted Projects by Category</h2>
+                    <div id="project-list" class="row g-4">
+                        <!-- Project cards will be added here -->
+                    </div>
+                    <p id="no-projects" class="text-muted" style="display: none;">No projects listed.</p>
+                </section>
+            </div>
+        </div>
+    </div> <!-- End container -->
+
+  
+
+    <!-- JavaScript Libraries -->
+    <script src="static/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800, // values from 0 to 3000, with step 50ms
+            easing: 'ease-in-out', // default easing for AOS animations
+            once: false, // Set to true to trigger animation only once
+        });
+
+             // Manually refresh AOS when scrolled to top
+                window.addEventListener('scroll', function () {
+                    if (window.scrollY === 0) {
+                        AOS.refresh(); // Refresh AOS when scroll position is at the top
+                    }
+                });
+    </script>
+
+  
+              
+
+    <!-- Custom JavaScript for Data Loading -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // --- Helper Function to Fetch JSON ---
+            async function fetchData(url) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status} while fetching ${url}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error("Could not fetch data:", error);
+                    return null; // Return null on error
+                }
+            }
+
+            // --- Load User Info ---
+            fetchData("data/user_info.json").then(data => {
+                if (!data) return; // Don't proceed if data is null
+
+                document.title = `${data.name} - CV`; // Set page title
+                document.getElementById("name").textContent = data.name;
+                document.getElementById("title").textContent = data.title;
+                document.getElementById("summary").textContent = data.summary;
+
+                const profileImg = document.getElementById("profile-img");
+                if (data.profile_image) {
+                    profileImg.src = data.profile_image;
+                    profileImg.style.display = 'inline-block'; // Show image if path exists
+                }
+
+                // Populate Contacts
+                const contactContainer = document.getElementById("contacts");
+                contactContainer.innerHTML = ''; // Clear existing
+                if (data.contacts && data.contacts.length > 0) {
+                    data.contacts.forEach(contact => {
+                        const a = document.createElement("a");
+                        a.href = contact.link;
+                        a.className = "btn badge"; // Added btn for consistency if needed
+                        a.style.background = contact.bgcolor || '#007bff'; // Default color
+                        a.style.color = contact.color || '#ffffff';
+                        a.target = "_blank";
+                        a.innerHTML = `<i class="${contact.icon}"></i> ${contact.type}`;
+                        a.setAttribute('data-aos', 'zoom-in'); // Add AOS effect
+                        a.setAttribute('data-aos-duration', '500');
+                        contactContainer.appendChild(a);
+                    });
+                }
+
+                // Populate Personal Details (Optional section)
+                const personalDetailsContainer = document.getElementById("personal-details");
+                personalDetailsContainer.innerHTML = ''; // Clear existing
+                if (data.personal_details && data.personal_details.length > 0) {
+                    data.personal_details.forEach(detail => {
+                        // Displaying simple text for now, adjust as needed
+                        const span = document.createElement("span");
+                        span.className = "badge bg-light text-dark"; // Example style
+                        span.textContent = `${detail.label || Object.keys(detail)[0]}: ${detail.value || Object.values(detail)[0]}`; // Flexible display
+                        span.setAttribute('data-aos', 'fade-up');
+                        span.setAttribute('data-aos-delay', '100');
+                        personalDetailsContainer.appendChild(span);
+                    });
+                }
+
+
+            });
+
+            // --- Load Work Experience ---
+            fetchData("data/experience.json").then(data => {
+                const list = document.getElementById("experience-list");
+                const noData = document.getElementById("no-experience");
+                list.innerHTML = ''; // Clear existing
+                if (data && data.length > 0) {
+                    noData.style.display = 'none';
+                    data.forEach(job => {
+                        const card = document.createElement("div");
+                        card.className = "card mb-3 rounded-4";
+                        card.setAttribute('data-aos', 'zoom-in-up');
+                        card.innerHTML = `
+                            <div class="card-body">
+                                <h5 class="card-title">${job.title}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">${job.company} | ${job.period}</h6>
+                                <p class="card-text">${job.description}</p>
+                            </div>
+                        `;
+                        list.appendChild(card);
+                    });
+                } else {
+                    noData.style.display = 'block';
+                }
+            });
+
+            // --- Load Education ---
+            fetchData("data/education.json").then(data => {
+                const list = document.getElementById("education-list");
+                const noData = document.getElementById("no-education");
+                list.innerHTML = ''; // Clear existing
+                if (data && data.length > 0) {
+                    noData.style.display = 'none';
+                    data.forEach(edu => {
+                        const card = document.createElement("div");
+                        card.className = "card mb-3 rounded-4";
+                        card.setAttribute('data-aos', 'zoom-in-up');
+                        card.innerHTML = `
+                            <div class="card-body">
+                                <h5 class="card-title">${edu.degree}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">${edu.institution} | ${edu.period}</h6>
+                                ${edu.details ? `<p class="card-text">${edu.details}</p>` : ''}
+                            </div>
+                        `;
+                        list.appendChild(card);
+                    });
+                } else {
+                    noData.style.display = 'block';
+                }
+            });
+
+            // --- Load Skills ---
+            fetchData("data/skills.json").then(data => {
+                const list = document.getElementById("skills-list");
+                const noData = document.getElementById("no-skills");
+                list.innerHTML = ''; // Clear existing
+                // Ensure data is an object (dictionary in Python terms)
+                if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                    noData.style.display = 'none';
+                    Object.entries(data).forEach(([category, items]) => {
+                        const categoryTitle = document.createElement("h5");
+                        categoryTitle.className = "mt-2";
+                        categoryTitle.textContent = category;
+                        categoryTitle.setAttribute('data-aos', 'zoom-in-up');
+                        list.appendChild(categoryTitle);
+
+                        const skillContainer = document.createElement("div");
+                        skillContainer.className = "d-flex flex-wrap";
+
+                        items.forEach(skill => {
+                            const skillDiv = document.createElement("div");
+                            skillDiv.className = "me-2 mb-2";
+                            skillDiv.setAttribute('data-aos', 'fade-zoom-in');
+                            skillDiv.setAttribute('data-aos-easing', 'ease-in-back');
+                            skillDiv.setAttribute('data-aos-delay', '100'); // Stagger slightly
+                            skillDiv.setAttribute('data-aos-offset', '0');
+
+                            const icon = document.createElement("img");
+                            icon.src = skill.icon;
+                            icon.alt = `${skill.name} icon`;
+                            icon.className = "skill-icon";
+                            icon.setAttribute('data-aos', 'zoom-out-right');
+
+                            const badge = document.createElement("span");
+                            badge.className = "badge";
+                            badge.textContent = skill.name;
+                            badge.setAttribute('data-aos', 'zoom-out-left');
+
+                            // Apply background style: gradient > bgcolor > default
+                            let backgroundStyle = skill.gradient || skill.bgcolor || '#007bff';
+                            badge.style.background = backgroundStyle;
+                            badge.style.color = skill.color || '#fff'; // Default text color
+
+                            skillDiv.appendChild(icon);
+                            skillDiv.appendChild(badge);
+                            skillContainer.appendChild(skillDiv);
+                        });
+                        list.appendChild(skillContainer);
+                    });
+                } else {
+                    noData.style.display = 'block'; // Show no skills message
+                    list.style.display = 'none';    // Hide the card body content area
+                }
+            });
+
+            // --- Load Projects (Highlighting one per category) ---
+            fetchData("data/projects.json").then(data => {
+                const list = document.getElementById("project-list");
+                const noData = document.getElementById("no-projects");
+                list.innerHTML = ''; // Clear existing
+
+                if (data && data.length > 0) {
+                    noData.style.display = 'none';
+                    const seenCategories = new Set();
+                    const uniqueProjects = [];
+
+                    data.forEach(project => {
+                        const category = project.category;
+                        if (category && !seenCategories.has(category)) {
+                            uniqueProjects.push(project);
+                            seenCategories.add(category);
+                        }
+                        // If you want *all* projects uncomment the next line and comment out the if block above
+                        // uniqueProjects.push(project);
+                    });
+
+
+                    if (uniqueProjects.length > 0) {
+                        uniqueProjects.forEach(project => {
+                            const col = document.createElement("div");
+                            // Adjust column class based on how many unique categories you expect
+                            // col-md-6 works well for 2 per row. Use col-12 for one per row.
+                            col.className = "col-md-6";
+
+                            const card = document.createElement("div");
+                            card.className = "card mb-3 h-100"; // h-100 for equal height cards
+                            card.setAttribute('data-aos', 'zoom-in-up');
+
+
+                            let imgHtml = '';
+                            if (project.cover) {
+                                imgHtml = `<img src="${project.cover}" class="card-img-top" alt="${project.title || 'Project'} cover" style="max-height: 150px; object-fit: cover;">`;
+                            }
+
+                            let categoryLinkHtml = '';
+                            if (project.category) {
+                                // Create a link to a hypothetical category page or filter function
+                                // Using query parameters is a common static site approach
+                                const categoryUrl = `category.html?name=${encodeURIComponent(project.category)}`;
+                                categoryLinkHtml = `
+                                    <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                                        <a href="${categoryUrl}" class="badge" style="background: linear-gradient(to right, #dd0031, #A00025FF); color:#fff;" data-aos="zoom-in-up">
+                                            More ${project.category}
+                                        </a>
+                                    </div>`;
+                            }
+
+                            card.innerHTML = `
+                                ${imgHtml}
+                                <div class="card-body d-flex flex-column">
+                                    <!-- Optional: Add title back if needed -->
+                                    <!-- <h5 class="card-title">${project.title}</h5> -->
+                                    <div class="mt-auto"> <!-- Pushes link to bottom if card body flexes -->
+                                        ${categoryLinkHtml}
+                                    </div>
+                                </div>
+                            `;
+                            col.appendChild(card);
+                            list.appendChild(col);
+                        });
+                    } else {
+                        // This case might happen if projects exist but none have categories
+                        noData.style.display = 'block';
+                    }
+
+                } else {
+                    noData.style.display = 'block';
+                }
+
+                // IMPORTANT: Refresh AOS after dynamically adding content if elements were hidden initially
+                // or added after the initial init.
+                AOS.refresh();
+            });
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+
+</html>
